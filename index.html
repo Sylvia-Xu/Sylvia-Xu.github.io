@@ -1,149 +1,120 @@
-
+<!DOCTYPE html>
 <html>
-<head><meta name="viewport" content="width=device-width">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script>
-function transformxml()
-{
-if (window.ActiveXObject)
- {
- // IE
-
- // XML:
- var xmltxt
- xmltxt=document.getElementById("xmlcode").value
- if (xmltxt=="")
-  {
-  alert("The XML is empty")
-  return false;
-  }
- xml=new ActiveXObject("MSXML2.DOMDocument");
- xml.async=false
- xml.loadXML(xmltxt)
- if (xml.parseError.errorCode!=0)
-  {
-  document.write("Error in XML<br><br>Line " + xml.parseError.line + ": " + xml.parseError.reason);   
-  alert("Error in XML\n\nLine " + xml.parseError.line + ": " + xml.parseError.reason);
-  return false
-  }
- // XSL:
- var xsltxt
- xsltxt=document.getElementById("xsltcode").value
- if (xsltxt=="")
-  {
-  alert("The XSLT is empty")
-  return false
-  }
- xsl=new ActiveXObject("Microsoft.XMLDOM")
- xsl.async=false
- xsl.loadXML(xsltxt)
- if (xsl.parseError.errorCode!=0)
-  {
-  document.write("Error in XSLT<br><br>Line " + xsl.parseError.line + ": " + xsl.parseError.reason);     
-  alert("Error in XSLT\n\nLine " + xsl.parseError.line + ": " + xsl.parseError.reason);
-  return false
-  }
-
- // Transform:
- document.write(xml.transformNode(xsl));     
- }
-else if (document.implementation && document.implementation.createDocument)
- {
- // Mozilla
- // XML:
- var xmltxt
- xmltxt=document.getElementById("xmlcode").value
- if (xmltxt=="")
-  {
-  alert("The XML is empty")
-  return false
-  }
- var doc=new DOMParser();
- var xml=doc.parseFromString(xmltxt,"text/xml");
- if (xml.documentElement.nodeName=="parsererror")
-  {
-  document.write("Error in XML<br><br>" + xml.documentElement.childNodes[0].nodeValue);
-  alert("Error in XML\n\n" + xml.documentElement.childNodes[0].nodeValue);
-  return false;
-  }
- // XSL:
- var xsltPrs=new XSLTProcessor();
- var xsltxt
- xsltxt=document.getElementById("xsltcode").value
- if (xsltxt=="")
-  {
-  alert("The XSLT is empty")
-  return false
-  }
- xsl=doc.parseFromString(xsltxt,"text/xml");
- if (xsl.documentElement.nodeName=="parsererror")
-  {
-  document.write("Error in XSLT<br><br>" + xsl.documentElement.childNodes[0].nodeValue);  
-  alert("Error in XSLT\n\n" + xsl.documentElement.childNodes[0].nodeValue);
-  return false;
-  }
-
- xsltPrs.importStylesheet(xsl);
-  
- // Transform:
- var result=xsltPrs.transformToFragment(xml,document);
-   document.getElementById("result_output").appendChild(result);
-// document.replaceChild(result,window.document.childNodes[0])
- }
-else
- {
- // No Browser support:
- alert("Your browser does not support this example.");
- }
+<title>W3.CSS Template</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
+.w3-sidenav a,.w3-sidenav h4 {padding: 12px;}
+.w3-navbar li a {
+    padding-top: 12px;
+    padding-bottom: 12px;
 }
-</script>
-</head>
+</style>
+<body>
 
-<body onload="transformxml()">
-<div id="result_output"></div>
-<textarea id="xmlcode" style="display:none"><?xml version="1.0" encoding="UTF-8"?>
-<catalog>
-  <history>
-   <salary tend="1991-08-05" tstart="1990-08-05">40000</salary>
-   <salary tend="1992-08-04" tstart="1991-08-05">42085</salary>
-   <salary tend="1993-08-04" tstart="1992-08-04">42629</salary>
-   <salary tend="1994-08-04" tstart="1993-08-04">45844</salary>
-   <salary tend="1995-08-04" tstart="1994-08-04">47518</salary>
-   <salary tend="1996-08-03" tstart="1995-08-04">47917</salary>
-   <salary tend="1997-08-03" tstart="1996-08-03">52255</salary>
-   <salary tend="1998-08-03" tstart="1997-08-03">53747</salary>
-   <salary tend="1999-08-03" tstart="1998-08-03">56032</salary>
-   <salary tend="2000-08-02" tstart="1999-08-03">58299</salary>
-   <salary tend="2001-08-02" tstart="2000-08-02">60098</salary>
-   <salary tend="9999-12-31" tstart="2001-08-02">59755</salary>
-  </history>
-</catalog>
-</textarea>
-<textarea id="xsltcode" style="display:none"><?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">  
-    <xsl:template match="/">
-        <html>
-            <body>
-                <h2>Selection and Temporal Projection - Salary History of Anneke Preusig</h2>
-                <table border="1">
-                    <tr bgcolor="#9acd32">
-                        <th style="text-align:center">Start Date</th>
-                        <th style="text-align:center">End Date</th>
-                        <th style="text-align:center">Salary</th>
-                    </tr>
-                    <xsl:for-each select="catalog/history/salary">
-                        <tr>
-                            <td><xsl:value-of select="@tstart"/></td>
-                            <td><xsl:value-of select="@tend"/></td>
-                            <td><xsl:value-of select="."/></td>
-                        </tr>
-                    </xsl:for-each>
-                </table>
-            </body>
-        </html>
-    </xsl:template>
-</xsl:stylesheet>
-</textarea>
+<!-- Navbar -->
+<div class="w3-top">
+  <ul class="w3-navbar w3-theme w3-top w3-left-align w3-large">
+    <h1 style="margin-left:10px;">CS240A Final Project1</h1>
+  </ul>
+</div>
+
+<!-- Sidenav -->
+<nav class="w3-sidenav w3-collapse w3-theme-l5 w3-animate-left" style="z-index:3;width:250px;margin-top:73.5px;" id="mySidenav">
+  <h3 style="margin-left:10px;">Ziyue Xu</h3>
+  <a href="#" class="w3-hover-black">Project Report</a>
+  <a href="https://github.com/Sylvia-Xu/CS240A-Database-Systems" class="w3-hover-black">Github Repository</a>
+</nav>
+
+<!-- Overlay effect when opening sidenav on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- Main content: shift it to the right by 250 pixels when the sidenav is visible -->
+<div class="w3-main" style="margin-left:250px">
+
+  <div class="w3-row w3-padding-64">
+    <div class="w3-twothird w3-container">
+      <h3 class="w3-text-teal">Problem 1</h1>
+      <p>Selection and Temporal Projection. Retrieve the employment history of employee "Anneke Preusig" (i.e., the departments where she worked and the periods during which she worked there).</p>
+      <div>
+        <a href="https://raw.githubusercontent.com/Sylvia-Xu/CS240A-Database-Systems/master/queries/query1.xquery" class="w3-hover-black">XQuery</a>
+        <a href="https://drive.google.com/a/g.ucla.edu/file/d/0B-0AwrQToFkAemlTQmdsY2hlUFU/view?usp=sharing" class="w3-hover-black">Result</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-row">
+    <div class="w3-twothird w3-container">
+      <h3 class="w3-text-teal">Problem 2</h1>
+      <p>Temporal Snapshot. Retrieve the name,  salary and department of  each employee who, on 1995-01-06 was making less than $44000.</p>
+      <div>
+        <a href="#" class="w3-hover-black">XQuery</a>
+        <a href="#" class="w3-hover-black">Result</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-row w3-padding-64">
+    <div class="w3-twothird w3-container">
+      <h3 class="w3-text-teal">Problem 3</h1>
+      <p>Temporal Slicing. For all departments, show their history in the period starting on 1994-05-01 and ending 1996-05-06.</p>
+      <div>
+        <a href="#" class="w3-hover-black">XQuery</a>
+        <a href="#" class="w3-hover-black">Result</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-row w3-padding-64">
+    <div class="w3-twothird w3-container">
+      <h3 class="w3-text-teal">Problem 4</h1>
+      <p>Duration: For each employee, show the longest period during which he/she went with no change in salary and his/her salary during that time.</p>
+      <div>
+        <a href="#" class="w3-hover-black">XQuery</a>
+        <a href="#" class="w3-hover-black">Result</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-row w3-padding-64">
+    <div class="w3-twothird w3-container">
+      <h3 class="w3-text-teal">Problem 5</h1>
+      <p>Temporal Join. For each employee show title history and  his/her manager history.</p>
+      <div>
+        <a href="#" class="w3-hover-black">XQuery</a>
+        <a href="#" class="w3-hover-black">Result</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-row w3-padding-64">
+    <div class="w3-twothird w3-container">
+      <h3 class="w3-text-teal">Problem 6</h1>
+      <p>Temporal Count.  Print the history  of  employee count for (i) each department, and (ii) the whole company.</p>
+      <div>
+        <a href="#" class="w3-hover-black">XQuery</a>
+        <a href="#" class="w3-hover-black">Result</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-row w3-padding-64">
+    <div class="w3-twothird w3-container">
+      <h3 class="w3-text-teal">Problem 7</h1>
+      <p>Temporal Max.   For the employees  in department d005,  find  the maximum of their salaries over time,  and print the history of such a maximum.</p>
+      <div>
+        <a href="#" class="w3-hover-black">XQuery</a>
+        <a href="#" class="w3-hover-black">Result</a>
+      </div>
+    </div>
+  </div>
+
+<!-- END MAIN -->
+</div>
+
 </body>
 </html>
